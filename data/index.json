@@ -1,0 +1,12 @@
+{
+  "activities": [
+    {
+      "id": 1,
+      "title": "샘플 활동 자료",
+      "date": "2026-01-15",
+      "description": "활동 자료 설명을 여기에 작성합니다.",
+      "filename": "sample.pdf",
+      "category": "대회"
+    }
+  ]
+}

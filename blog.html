@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Blog · 민경민</title>
+    <meta
+      name="description"
+      content="민경민의 블로그 — 생각과 경험을 공유합니다."
+    />
+
+    <meta property="og:title" content="Blog · 민경민" />
+    <meta
+      property="og:description"
+      content="생각과 경험을 공유하는 블로그입니다."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mgm136044.github.io/blog.html" />
+
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='128' height='128' rx='28' fill='%23111111'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont' font-size='64' fill='white'%3EM%3C/text%3E%3C/svg%3E"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">본문 바로가기</a>
+
+    <header class="topbar" role="banner">
+      <div class="topbar__inner">
+        <a class="brand" href="./">
+          <span class="brand__icon" aria-hidden="true">M</span>
+          <span class="brand__text">mingyeongmin</span>
+        </a>
+
+        <nav class="nav" aria-label="페이지">
+          <a href="./">Home</a>
+          <a href="./blog.html">Blog</a>
+          <a href="./research.html">Research</a>
+          <a href="./study.html">Study</a>
+          <a href="./activities.html">Activities</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page">
+      <section class="block">
+        <h1>Blog</h1>
+        <p class="muted">생각과 경험을 공유하는 공간입니다.</p>
+      </section>
+
+      <section class="block" id="posts-container">
+        <div class="note">
+          <strong>로딩 중...</strong>
+          <span class="muted">포스트를 불러오는 중입니다.</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./js/markdown-loader.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        const container = document.getElementById('posts-container');
+        const loader = new MarkdownLoader('./posts/blog');
+        
+        await loader.loadPosts();
+        loader.renderPostList(container);
+      });
+    </script>
+
+    <footer class="footer" aria-label="푸터">
+      <div class="footer__inner">
+        <span class="muted">© 2026 mingyeongmin</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <a class="link" href="./">홈으로</a>
+      </div>
+    </footer>
+  </body>
+</html>

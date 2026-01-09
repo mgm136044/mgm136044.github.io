@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Activities · 민경민</title>
+    <meta
+      name="description"
+      content="민경민의 활동 자료 — 대회, 프로젝트, 활동 관련 자료를 정리합니다."
+    />
+
+    <meta property="og:title" content="Activities · 민경민" />
+    <meta
+      property="og:description"
+      content="대회, 프로젝트, 활동 관련 자료를 정리한 페이지입니다."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mgm136044.github.io/activities.html" />
+
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)" />
+
+    <link rel="stylesheet" href="./styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='128'%3E%3Crect width='128' height='128' rx='28' fill='%23111111'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont' font-size='64' fill='white'%3EM%3C/text%3E%3C/svg%3E"
+    />
+    <style>
+      .pdf-viewer {
+        width: 100%;
+        height: 80vh;
+        min-height: 600px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface-2);
+        margin-top: 24px;
+      }
+
+      .pdf-viewer iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: var(--radius);
+      }
+
+      .pdf-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+      }
+
+      .activity-detail {
+        margin-top: 24px;
+        padding: 20px;
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+      }
+
+      .activity-detail h3 {
+        margin-top: 0;
+        margin-bottom: 12px;
+      }
+
+      .activity-detail .meta {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 16px;
+        flex-wrap: wrap;
+      }
+
+      .activity-detail .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#content">본문 바로가기</a>
+
+    <header class="topbar" role="banner">
+      <div class="topbar__inner">
+        <a class="brand" href="./">
+          <span class="brand__icon" aria-hidden="true">M</span>
+          <span class="brand__text">mingyeongmin</span>
+        </a>
+
+        <nav class="nav" aria-label="페이지">
+          <a href="./">Home</a>
+          <a href="./blog.html">Blog</a>
+          <a href="./research.html">Research</a>
+          <a href="./study.html">Study</a>
+          <a href="./activities.html">Activities</a>
+        </nav>
+      </div>
+    </header>
+
+    <main id="content" class="page">
+      <section class="block">
+        <h1>Activities</h1>
+        <p class="muted">대회, 프로젝트, 활동 관련 자료를 정리합니다.</p>
+      </section>
+
+      <section class="block" id="activities-container">
+        <div class="note">
+          <strong>로딩 중...</strong>
+          <span class="muted">활동 자료를 불러오는 중입니다.</span>
+        </div>
+      </section>
+
+      <section class="block" id="pdf-viewer-container" style="display: none;">
+        <div class="activity-detail" id="activity-detail"></div>
+        <div class="pdf-viewer">
+          <iframe id="pdf-frame" src="" title="PDF 뷰어"></iframe>
+        </div>
+        <div class="pdf-actions">
+          <a class="btn" href="#" id="download-btn" download>다운로드</a>
+          <a class="btn" href="#" id="back-to-list-btn">← 목록으로</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer" aria-label="푸터">
+      <div class="footer__inner">
+        <span class="muted">© 2026 mingyeongmin</span>
+        <span class="dot" aria-hidden="true">·</span>
+        <a class="link" href="./">홈으로</a>
+      </div>
+    </footer>
+
+    <script>
+      let activities = [];
+      let currentActivity = null;
+
+      // 활동 자료 목록 로드
+      async function loadActivities() {
+        try {
+          const response = await fetch('./data/index.json');
+          if (!response.ok) {
+            throw new Error('Failed to load activities');
+          }
+          const data = await response.json();
+          activities = data.activities || [];
+          return activities;
+        } catch (error) {
+          console.error('Error loading activities:', error);
+          return [];
+        }
+      }
+
+      // 활동 자료 목록 렌더링
+      function renderActivityList() {
+        const container = document.getElementById('activities-container');
+        const viewerContainer = document.getElementById('pdf-viewer-container');
+        
+        viewerContainer.style.display = 'none';
+        container.style.display = 'block';
+
+        if (activities.length === 0) {
+          container.innerHTML = `
+            <div class="note">
+              <strong>활동 자료가 없습니다</strong>
+              <span class="muted">새로운 활동 자료를 추가해보세요.</span>
+            </div>
+          `;
+          return;
+        }
+
+        const list = document.createElement('ul');
+        list.className = 'rows';
+        list.setAttribute('aria-label', '활동 자료 목록');
+
+        activities.forEach(activity => {
+          const item = document.createElement('li');
+          item.className = 'row';
+          
+          const date = activity.date || '날짜 미정';
+          const category = activity.category || '기타';
+
+          item.innerHTML = `
+            <div class="row__main">
+              <div class="row__title">
+                <strong><a href="#" class="activity-link" data-id="${activity.id}">${activity.title}</a></strong>
+                <span class="row__sub muted">${date}</span>
+              </div>
+              ${activity.description ? `<p class="row__desc">${activity.description}</p>` : ''}
+              <div class="tags tags--sm" aria-label="카테고리">
+                <span class="tag tag--sm">${category}</span>
+              </div>
+            </div>
+            <div class="row__side" aria-label="날짜">
+              <span class="muted">${date}</span>
+            </div>
+          `;
+
+          const link = item.querySelector('.activity-link');
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showActivity(activity.id);
+          });
+
+          list.appendChild(item);
+        });
+
+        container.innerHTML = '';
+        container.appendChild(list);
+      }
+
+      // 개별 활동 자료 표시
+      function showActivity(id) {
+        const activity = activities.find(a => a.id === id);
+        if (!activity) {
+          return;
+        }
+
+        currentActivity = activity;
+        const container = document.getElementById('activities-container');
+        const viewerContainer = document.getElementById('pdf-viewer-container');
+        const detailContainer = document.getElementById('activity-detail');
+        const pdfFrame = document.getElementById('pdf-frame');
+        const downloadBtn = document.getElementById('download-btn');
+        const backBtn = document.getElementById('back-to-list-btn');
+
+        // 상세 정보 표시
+        detailContainer.innerHTML = `
+          <h3>${activity.title}</h3>
+          <div class="meta">
+            <span class="meta-item">
+              <strong>날짜:</strong> ${activity.date || '날짜 미정'}
+            </span>
+            ${activity.category ? `
+              <span class="meta-item">
+                <strong>카테고리:</strong> ${activity.category}
+              </span>
+            ` : ''}
+          </div>
+          ${activity.description ? `<p>${activity.description}</p>` : ''}
+        `;
+
+        // PDF 로드
+        const pdfUrl = `./data/${activity.filename}`;
+        pdfFrame.src = pdfUrl;
+        downloadBtn.href = pdfUrl;
+        downloadBtn.download = activity.filename;
+
+        // 뒤로가기 버튼
+        backBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          renderActivityList();
+        });
+
+        // 컨테이너 전환
+        container.style.display = 'none';
+        viewerContainer.style.display = 'block';
+
+        // 스크롤 맨 위로
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      // 초기화
+      document.addEventListener('DOMContentLoaded', async () => {
+        await loadActivities();
+        renderActivityList();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "posts": [
+    {
+      "filename": "2026-01-15-research-intro.md",
+      "title": "연구 소개",
+      "date": "2026-01-15",
+      "description": "Physical AI와 Embedded Systems 연구에 대한 소개입니다.",
+      "tags": ["Physical AI", "Embedded"]
+    }
+  ]
+}
