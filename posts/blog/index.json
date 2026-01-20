@@ -1,6 +1,13 @@
 {
   "posts": [
     {
+      "filename": "2026-01-20-segmentation-appendix.md",
+      "title": "Appendix: 세그멘테이션 실험 로그/설정 요약 (Pooling, Skip, FLOPs/Params)",
+      "date": "2026-01-20",
+      "description": "Agent.md의 실험 기록 중 공개 가치가 큰 부분만 추려 pooling/skip 최적화 표, 최종 설정, FLOPs/Params, thop 주의사항을 Appendix로 정리합니다.",
+      "tags": ["Segmentation", "Optimization", "FLOPs", "Dice"]
+    },
+    {
       "filename": "2026-01-20-resnet18-unet-segmentation.md",
       "title": "ResNet18 + U-Net으로 세그멘테이션 모델 설계하기 (224 입력)",
       "date": "2026-01-20",
